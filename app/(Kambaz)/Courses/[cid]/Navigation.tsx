@@ -10,11 +10,14 @@ export default function CourseNavigation() {
         Modules
       </Link>
       <br />
-      <Link href="/Courses/1234/Piazza" id="wd-course-piazza-link">
+      <Link href="https://piazza.com/class" id="wd-course-piazza-link">
         Piazza
       </Link>
       <br />
-      <Link href="/Courses/1234/Zoom" id="wd-course-zoom-link">
+      <Link
+        href="https://northeastern.zoom.us/j/96455158889"
+        id="wd-course-zoom-link"
+      >
         Zoom
       </Link>
       <br />

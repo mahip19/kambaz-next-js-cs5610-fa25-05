@@ -56,7 +56,7 @@ export default function Lab1() {
           <li>Flip and cook the other side.</li>
           <li>Serve and enjoy!</li>
         </ol>
-        My favorite recipe:
+        My favorite recipe: Lemonade
         <ol id="wd-my-favorite-recipe">
           <li>Glass of water.</li>
           <li>Add lemon juice.</li>
@@ -74,10 +74,10 @@ export default function Lab1() {
         </ul>
         Your favorite books (in no particular order)
         <ul id="wd-your-books">
+          <li>Gunda by Jaishankar Prasad</li>
           <li>Six pillars of self-esteem</li>
           <li>Rich dad poor dad</li>
           <li>Wings of fire</li>
-          <li>Gunda by Jaishankar Prasad</li>
         </ul>
       </div>
 
@@ -105,7 +105,54 @@ export default function Lab1() {
               <td>2/10/21</td>
               <td>90</td>
             </tr>
-            <tr> ... </tr>
+            <tr>
+              <td>Q3</td>
+              <td>JavaScript Basics</td>
+              <td>2/17/21</td>
+              <td>88</td>
+            </tr>
+            <tr>
+              <td>Q4</td>
+              <td>DOM Manipulation</td>
+              <td>2/24/21</td>
+              <td>92</td>
+            </tr>
+            <tr>
+              <td>Q5</td>
+              <td>React Components</td>
+              <td>3/3/21</td>
+              <td>87</td>
+            </tr>
+            <tr>
+              <td>Q6</td>
+              <td>State & Props</td>
+              <td>3/10/21</td>
+              <td>93</td>
+            </tr>
+            <tr>
+              <td>Q7</td>
+              <td>Routing</td>
+              <td>3/17/21</td>
+              <td>89</td>
+            </tr>
+            <tr>
+              <td>Q8</td>
+              <td>Node.js</td>
+              <td>3/24/21</td>
+              <td>95</td>
+            </tr>
+            <tr>
+              <td>Q9</td>
+              <td>Express.js</td>
+              <td>3/31/21</td>
+              <td>91</td>
+            </tr>
+            <tr>
+              <td>Q10</td>
+              <td>MongoDB</td>
+              <td>4/7/21</td>
+              <td>94</td>
+            </tr>
           </tbody>
           <tfoot>
             <tr>
@@ -127,11 +174,7 @@ export default function Lab1() {
         <br />
         Loading a local image:
         <br />
-        <img
-          id="wd-teslabot"
-          src="/images/web1_Starship-gap2.jpg"
-          height="200px"
-        />
+        <img id="wd-teslabot" src="/images/teslabot.webp" height="200px" />
       </div>
 
       <div id="wd-forms">
@@ -139,11 +182,11 @@ export default function Lab1() {
         <form id="wd-text-fields">
           <h5>Text Fields</h5>
           <label htmlFor="wd-text-fields-username">Username:</label>
-          <input placeholder="jdoe" id="wd-text-fields-username" /> <br />
+          <input placeholder="mparekh" id="wd-text-fields-username" /> <br />
           <label htmlFor="wd-text-fields-password">Password:</label>
           <input
             type="password"
-            value="123@#$asd"
+            value="maxverstappen"
             id="wd-text-fields-password"
           />
           <br />
@@ -153,8 +196,8 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-last-name">Last name:</label>
           <input
             type="text"
-            placeholder="Doe"
-            value="Wonderland"
+            placeholder="Mahip"
+            value="Parekh"
             title="The last name"
             id="wd-text-fields-last-name"
           />
@@ -178,6 +221,8 @@ export default function Lab1() {
           >
             Hello World!
           </button>
+          <label htmlFor="wd-file-upload">Upload a file:</label>
+          <input id="wd-file-upload" type="file" />
           <h5 id="wd-radio-buttons">Radio buttons</h5>
           <label>Favorite movie genre:</label>
           <br />
@@ -235,7 +280,7 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-email"> Email: </label>
           <input
             type="email"
-            placeholder="jdoe@somewhere.com"
+            placeholder="parkh.mahi@northeastern.edu"
             id="wd-text-fields-email"
           />
           <br />
@@ -252,12 +297,12 @@ export default function Lab1() {
             type="range"
             value="4"
             max="5"
-            placeholder="Doe"
+            placeholder="Mahip"
             id="wd-text-fields-rating"
           />
           <br />
           <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
-          <input type="date" value="2000-01-21" id="wd-text-fields-dob" />
+          <input type="date" value="2000-11-19" id="wd-text-fields-dob" />
           <br />
         </form>
         <h4>Anchor tag</h4>
