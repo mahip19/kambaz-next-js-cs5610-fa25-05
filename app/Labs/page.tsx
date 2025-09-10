@@ -1,8 +1,19 @@
 import Link from "next/link";
+import TOC from "./TOC";
 export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <TOC />
+      <p>
+        <Link
+          href="https://github.com/mahip19/kambaz-next-js-cs5610-fa25-05"
+          id="wd-github"
+        >
+          GitHub Repository
+        </Link>
+      </p>
+      <p>Full Name: Mahip Parekh</p>
       <ul>
         <li>
           <Link href="/Labs/Lab1" id="wd-lab1-link">
