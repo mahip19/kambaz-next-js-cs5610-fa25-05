@@ -30,7 +30,9 @@ export default function Modules() {
           {collapsed ? "Expand All" : "Collapse All"}
         </button>
         <button onClick={handleViewProgress}>View Progress</button>
-        <button onClick={handlePublishAll}>Publish All</button>
+        <select defaultValue="publish_all" onChange={handlePublishAll}>
+          <option value="publish_all">Publish All</option>
+        </select>
         <button onClick={handleAddModule}>+ Module</button>
       </div>
 
