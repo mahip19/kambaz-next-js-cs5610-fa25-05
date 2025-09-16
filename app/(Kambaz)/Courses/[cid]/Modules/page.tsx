@@ -2,8 +2,8 @@
 import { useState } from "react";
 
 export default function Modules() {
-  // collapsed = true → lessons hidden
-  // collapsed = false → lessons shown
+  // collapsed = true -> lessons hidden
+  // collapsed = false -> lessons shown
   const [collapsed, setCollapsed] = useState(false);
 
   // Toggle collapse/expand
@@ -25,8 +25,7 @@ export default function Modules() {
 
   return (
     <div>
-      {/* Buttons Row */}
-      <div style={{ marginBottom: "1rem" }}>
+      <div>
         <button onClick={handleCollapseAll}>
           {collapsed ? "Expand All" : "Collapse All"}
         </button>
@@ -35,7 +34,6 @@ export default function Modules() {
         <button onClick={handleAddModule}>+ Module</button>
       </div>
 
-      {/* Modules List */}
       <ul id="wd-modules">
         <li className="wd-module">
           <div className="wd-title">Week 1</div>

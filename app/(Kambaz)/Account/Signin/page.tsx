@@ -7,23 +7,21 @@ export default function Signin() {
         className="wd-username"
         placeholder="username"
         defaultValue="Raptor"
-      />{" "}
+      />
       <br />
       <input
         className="wd-password"
         placeholder="password"
         type="password"
         defaultValue="123213213"
-      />{" "}
+      />
       <br />
       <Link id="wd-signin-btn" href="/Dashboard">
-        {" "}
-        Sign in{" "}
-      </Link>{" "}
+        Sign in
+      </Link>
       <br />
       <Link id="wd-signup-link" href="Signup">
-        {" "}
-        Sign up{" "}
+        Sign up
       </Link>
     </div>
   );

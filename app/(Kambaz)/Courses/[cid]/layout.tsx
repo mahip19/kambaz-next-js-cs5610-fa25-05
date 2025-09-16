@@ -13,12 +13,10 @@ export default async function CoursesLayout({
         <tbody>
           <tr>
             <td valign="top" width="200">
-              {" "}
-              <CourseNavigation />{" "}
+              <CourseNavigation />
             </td>
             <td valign="top" width="100%">
-              {" "}
-              {children}{" "}
+              {children}
             </td>
           </tr>
         </tbody>

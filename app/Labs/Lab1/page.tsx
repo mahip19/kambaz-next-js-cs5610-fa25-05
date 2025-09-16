@@ -186,18 +186,18 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-password">Password:</label>
           <input
             type="password"
-            value="maxverstappen"
+            defaultValue="maxverstappen"
             id="wd-text-fields-password"
           />
           <br />
           <label htmlFor="wd-text-fields-first-name">First name:</label>
-          <input type="text" title="John" id="wd-text-fields-first-name" />{" "}
+          <input type="text" title="John" id="wd-text-fields-first-name" />
           <br />
           <label htmlFor="wd-text-fields-last-name">Last name:</label>
           <input
             type="text"
             placeholder="Mahip"
-            value="Parekh"
+            defaultValue="Parekh"
             title="The last name"
             id="wd-text-fields-last-name"
           />
@@ -287,7 +287,7 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-salary-start"> Starting salary:</label>
           <input
             type="number"
-            value="100000"
+            defaultValue="100000"
             placeholder="1000"
             id="wd-text-fields-salary-start"
           />
@@ -295,14 +295,18 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-rating"> Rating: </label>
           <input
             type="range"
-            value="4"
+            defaultValue="4"
             max="5"
             placeholder="Mahip"
             id="wd-text-fields-rating"
           />
           <br />
           <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
-          <input type="date" value="2000-11-19" id="wd-text-fields-dob" />
+          <input
+            type="date"
+            defaultValue="2000-11-19"
+            id="wd-text-fields-dob"
+          />
           <br />
         </form>
         <h4>Anchor tag</h4>
