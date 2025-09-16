@@ -14,6 +14,9 @@ export default function Labs() {
         </Link>
       </p>
       <p>Full Name: Mahip Parekh</p>
+      <p>
+        Section: CS6650 Web Development | Online | Instructor: Jose Annunziato
+      </p>
       <ul>
         <li>
           <Link href="/Labs/Lab1" id="wd-lab1-link">
