@@ -18,7 +18,8 @@ export default function Labs() {
         </p>
         <p>Full Name: Mahip Deven Parekh</p>
         <p>
-          Section: CS5610 Web Development | Online | Instructor: Jose Annunziato
+          Section: Sec: 5 | CS5610 Web Development | Online | Instructor: Jose
+          Annunziato
         </p>
       </section>
       <ul>
