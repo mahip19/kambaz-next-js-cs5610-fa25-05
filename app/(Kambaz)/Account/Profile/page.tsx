@@ -26,7 +26,7 @@ export default function Profile() {
       <br />
       <select defaultValue="FACULTY" id="wd-role">
         <option value="USER">User</option> <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option>{" "}
+        <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
       </select>
       <br />
