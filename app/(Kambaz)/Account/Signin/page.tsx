@@ -29,11 +29,11 @@ export default function Signin() {
           <h1 className="mb-4">Signin</h1>
           <Form onSubmit={handleSignin}>
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" required />
+              <FormControl placeholder="username" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-password">
-              <FormControl placeholder="password" type="password" required />
+              <FormControl placeholder="password" type="password" />
             </Form.Group>
 
             <Button
@@ -41,6 +41,7 @@ export default function Signin() {
               variant="primary"
               type="submit"
               className="w-100"
+              href="/Dashboard"
             >
               Signin
             </Button>

@@ -1,4 +1,4 @@
-"use client"; // Required for using the useRouter hook
+"use client"; //  for using the useRouter hook
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,19 +29,15 @@ export default function Signup() {
           <h1 className="mb-4">Signup</h1>
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" required />
+              <FormControl placeholder="username" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-password">
-              <FormControl placeholder="password" type="password" required />
+              <FormControl placeholder="password" type="password" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-verify-password">
-              <FormControl
-                placeholder="verify password"
-                type="password"
-                required
-              />
+              <FormControl placeholder="verify password" type="password" />
             </Form.Group>
 
             <Button
