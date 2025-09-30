@@ -11,8 +11,9 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 export default function KambazNavigation() {
   const pathname = usePathname();
 
+  // 💡 Updated logic to use startsWith()
   const linkClass = (path: string) =>
-    pathname === path
+    pathname.startsWith(path)
       ? "bg-white text-danger text-decoration-none d-block py-2"
       : "bg-black text-white text-decoration-none d-block py-2";
 
@@ -34,8 +35,8 @@ export default function KambazNavigation() {
 
       <ListGroupItem className="border-0 text-center p-0">
         <Link
-          href="/Account/Signin"
-          className={linkClass("/Account/Signin")}
+          href="/Account/Signin" // Use the base path for consistency
+          className={linkClass("/Account")}
           id="wd-account-link"
         >
           <FaRegCircleUser className="fs-1" />

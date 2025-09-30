@@ -1,7 +1,27 @@
 "use client";
+import { useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import Select from "react-select";
+import "react-datepicker/dist/react-datepicker.css";
+
+const assignToOptions = [
+  { value: "everyone", label: "Everyone" },
+  { value: "section1", label: "Section 1" },
+  { value: "section2", label: "Section 2" },
+  { value: "admin", label: "Admins Only" },
+];
 
 export default function AssignmentEditor() {
+  const [selectedOptions, setSelectedOptions] = useState([assignToOptions[0]]);
+  const [dueDate, setDueDate] = useState<Date | null>(
+    new Date("2024-05-13T23:59:00")
+  );
+  const [availableFromDate, setAvailableFromDate] = useState<Date | null>(
+    new Date("2024-05-06T00:00:00")
+  );
+  const [untilDate, setUntilDate] = useState<Date | null>(null);
+
   return (
     <div id="wd-assignments-editor" className="p-3">
       {/* Assignment Name */}
@@ -73,7 +93,7 @@ The Kanbas application should include a link to navigate back to the landing pag
         <Form.Label column sm={2}>
           Submission Type
         </Form.Label>
-        <Col sm={4}>
+        <Col sm={4} className="mt-2 p-3 border rounded">
           <Form.Select defaultValue="Online">
             <option>Online</option>
             <option>On Paper</option>
@@ -95,37 +115,55 @@ The Kanbas application should include a link to navigate back to the landing pag
         <Form.Label column sm={2}>
           Assign
         </Form.Label>
-        <Col sm={4}>
-          <Form.Label>Assign to</Form.Label>
-          <Form.Select defaultValue="Everyone">
-            <option>Everyone</option>
-            <option>Section 1</option>
-            <option>Section 2</option>
-          </Form.Select>
-        </Col>
-      </Form.Group>
-
-      {/* Dates */}
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={2}></Form.Label>
-        <Col sm={4}>
-          <Form.Label>Due</Form.Label>
-          <Form.Control type="datetime-local" defaultValue="2024-05-13T23:59" />
-
-          <div className="mt-3">
-            <Form.Label>Available from</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              defaultValue="2024-05-06T00:00"
+        <Col sm={6} className="p-3 border rounded">
+          {/* Assign to Dropdown */}
+          <div className="mb-3">
+            <Form.Label>Assign to</Form.Label>
+            <Select
+              defaultValue={[assignToOptions[0]]}
+              isMulti
+              options={assignToOptions}
+              classNamePrefix="select"
+              placeholder="Select..."
             />
           </div>
-          <div className="mt-2">
-            <Form.Label>Until</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              defaultValue="2024-05-20T23:59"
+
+          {/* Due Date */}
+          <div className="mb-3">
+            <Form.Label className="d-block">Due</Form.Label>
+            <DatePicker
+              selected={dueDate}
+              onChange={(date) => setDueDate(date)}
+              showTimeSelect
+              dateFormat="MMMM d, yyyy, h:mm aa"
+              className="form-control"
             />
           </div>
+
+          {/* Available From and Until side-by-side */}
+          <Row>
+            <Col>
+              <Form.Label className="d-block">Available from</Form.Label>
+              <DatePicker
+                selected={availableFromDate}
+                onChange={(date) => setAvailableFromDate(date)}
+                showTimeSelect
+                dateFormat="MMMM d, yyyy, h:mm aa"
+                className="form-control"
+              />
+            </Col>
+            <Col>
+              <Form.Label className="d-block">Until</Form.Label>
+              <DatePicker
+                selected={untilDate}
+                onChange={(date) => setUntilDate(date)}
+                showTimeSelect
+                placeholderText="Click to select a date"
+                dateFormat="MMMM d, yyyy, h:mm aa"
+                className="form-control"
+              />
+            </Col>
+          </Row>
         </Col>
       </Form.Group>
 

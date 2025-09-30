@@ -1,15 +1,50 @@
 "use client";
-import Link from "next/link";
-import { Button, Form, ListGroup, Badge } from "react-bootstrap";
-import { BsSearch, BsPlus, BsGripVertical } from "react-icons/bs";
-import { IoEllipsisVertical } from "react-icons/io5";
-import { FaCheckCircle } from "react-icons/fa";
-// --- NEW ICON IMPORTS ---
-import { VscTriangleDown } from "react-icons/vsc";
-import { PiNotePencil } from "react-icons/pi";
 
-export default function Assignments() {
-  // Your CSS imports for the search bar can remain
+import { Badge, Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
+import Link from "next/link";
+import { BsGripVertical, BsPlus, BsSearch } from "react-icons/bs";
+import { PiNotePencil } from "react-icons/pi";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { VscTriangleDown } from "react-icons/vsc";
+
+type Assignment = {
+  id: string;
+  title: string;
+  href: string;
+  notAvailableUntil: string;
+  due: string;
+  points: number;
+};
+
+const ASSIGNMENTS: Assignment[] = [
+  {
+    id: "123",
+    title: "A1",
+    href: "/Courses/1234/Assignments/123",
+    notAvailableUntil: "May 6 at 12:00am",
+    due: "May 13 at 11:59pm",
+    points: 100,
+  },
+  {
+    id: "124",
+    title: "A2",
+    href: "/Courses/1234/Assignments/124",
+    notAvailableUntil: "May 13 at 12:00am",
+    due: "May 20 at 11:59pm",
+    points: 100,
+  },
+  {
+    id: "125",
+    title: "A3",
+    href: "/Courses/1234/Assignments/125",
+    notAvailableUntil: "May 20 at 12:00am",
+    due: "May 27 at 11:59pm",
+    points: 100,
+  },
+];
+
+export default function AssignmentList() {
   return (
     <div id="wd-assignments" className="p-3">
       {/* Top controls */}
@@ -55,79 +90,45 @@ export default function Assignments() {
           <IoEllipsisVertical className="fs-4 text-muted" />
         </div>
       </div>
+      <ListGroup id="wd-assignment-list" className="list-group-flush">
+        {ASSIGNMENTS.map((a) => (
+          <ListGroupItem
+            key={a.id}
+            className="d-flex p-0 border-0 border-bottom rounded-0"
+          >
+            {/* left green bar */}
+            <span
+              className="bg-success align-self-stretch"
+              style={{ width: 4 }}
+            />
 
-      <ListGroup id="wd-assignment-list">
-        {/* A1 */}
-        <ListGroup.Item className="d-flex align-items-left ps-1 border-0 border-start border-success border-4 rounded-0">
-          <BsGripVertical className="me-3 fs-4 text-muted" />
-          <PiNotePencil className="me-3 fs-4 text-success" />
-          {/* New Icon Added */}
-          <div className="flex-grow-1">
-            <Link
-              href="/Courses/1234/Assignments/123"
-              className="fw-bold text-decoration-none text-dark"
-            >
-              A1
-            </Link>
-            <div className="text-muted small">
-              <span className="text-danger">Multiple Modules</span> |
-              <b>Not available until</b> May 6 at 12:00am |<br />
-              <b>Due</b> May 13 at 11:59pm | <b>100 pts</b>
-            </div>
-          </div>
-          <div className="d-flex align-items-center ms-2">
-            <FaCheckCircle className="text-success me-3 fs-5" />
-            <IoEllipsisVertical className="fs-4 text-muted" />
-          </div>
-        </ListGroup.Item>
+            {/* content */}
+            <div className="d-flex align-items-start w-100 p-2 ps-3">
+              <BsGripVertical className="me-2 fs-4 text-muted" />
+              <PiNotePencil className="me-3 fs-4 text-success" />
 
-        {/* A2 */}
-        <ListGroup.Item className="d-flex align-items-left ps-1 border-0 border-start border-success border-4 rounded-0">
-          <BsGripVertical className="me-3 fs-4 text-muted" />
-          <PiNotePencil className="me-3 fs-4 text-success" />
-          {/* New Icon Added */}
-          <div className="flex-grow-1">
-            <Link
-              href="/Courses/1234/Assignments/124"
-              className="fw-bold text-decoration-none text-dark"
-            >
-              A2
-            </Link>
-            <div className="text-muted small">
-              <span className="text-danger">Multiple Modules</span> |
-              <b>Not available until</b> May 13 at 12:00am |<br />
-              <b>Due</b> May 20 at 11:59pm | <b>100 pts</b>
-            </div>
-          </div>
-          <div className="d-flex align-items-center ms-2">
-            <FaCheckCircle className="text-success me-3 fs-5" />
-            <IoEllipsisVertical className="fs-4 text-muted" />
-          </div>
-        </ListGroup.Item>
+              <div className="flex-grow-1">
+                <Link
+                  href={a.href}
+                  className="fw-bold text-decoration-none text-dark"
+                >
+                  {a.title}
+                </Link>
 
-        {/* A3 */}
-        <ListGroup.Item className="d-flex align-items-left ps-1 border-0 border-start border-success border-4 rounded-0">
-          <BsGripVertical className="me-3 fs-4 text-muted" />
-          <PiNotePencil className="me-3 fs-4 text-success" />
-          {/* New Icon Added */}
-          <div className="flex-grow-1">
-            <Link
-              href="/Courses/1234/Assignments/125"
-              className="fw-bold text-decoration-none text-dark"
-            >
-              A3
-            </Link>
-            <div className="text-muted small">
-              <span className="text-danger">Multiple Modules</span> |
-              <b>Not available until</b> May 20 at 12:00am |<br />
-              <b>Due</b> May 27 at 11:59pm | <b>100 pts</b>
+                <div className="text-muted small">
+                  <span className="text-danger">Multiple Modules</span> |{" "}
+                  <b>Not available until</b> {a.notAvailableUntil} |<br />
+                  <b>Due</b> {a.due} | <b>{a.points} pts</b>
+                </div>
+              </div>
+
+              <div className="d-flex align-items-center ms-2">
+                <FaCheckCircle className="text-success me-3 fs-5" />
+                <IoEllipsisVertical className="fs-4 text-muted" />
+              </div>
             </div>
-          </div>
-          <div className="d-flex align-items-center ms-2">
-            <FaCheckCircle className="text-success me-3 fs-5" />
-            <IoEllipsisVertical className="fs-4 text-muted" />
-          </div>
-        </ListGroup.Item>
+          </ListGroupItem>
+        ))}
       </ListGroup>
     </div>
   );

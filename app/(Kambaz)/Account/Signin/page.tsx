@@ -1,28 +1,59 @@
+"use client"; // Required for using the useRouter hook
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  FormControl,
+} from "react-bootstrap";
+
 export default function Signin() {
+  const router = useRouter();
+
+  // Function to handle form submission
+  const handleSignin = (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+    // Here you would typically handle authentication logic
+    // After successful sign-in, navigate to the profile page:
+    router.push("/Account/Profile");
+  };
+
   return (
-    <div id="wd-signin-screen">
-      <h3>Sign in</h3>
-      <input
-        className="wd-username"
-        placeholder="username"
-        defaultValue="Raptor"
-      />
-      <br />
-      <input
-        className="wd-password"
-        placeholder="password"
-        type="password"
-        defaultValue="123213213"
-      />
-      <br />
-      <Link id="wd-signin-btn" href="/Dashboard">
-        Sign in
-      </Link>
-      <br />
-      <Link id="wd-signup-link" href="Signup">
-        Sign up
-      </Link>
-    </div>
+    <Container>
+      <Row className="justify-content-center mt-5">
+        <Col xs={12} sm={8} md={6} lg={4}>
+          <h1 className="mb-4">Signin</h1>
+          <Form onSubmit={handleSignin}>
+            <Form.Group className="mb-3" controlId="wd-username">
+              <FormControl placeholder="username" required />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-password">
+              <FormControl placeholder="password" type="password" required />
+            </Form.Group>
+
+            <Button
+              id="wd-signin-btn"
+              variant="primary"
+              type="submit"
+              className="w-100"
+            >
+              Signin
+            </Button>
+          </Form>
+          <Link
+            id="wd-signup-link"
+            href="/Account/Signup"
+            className="d-block mt-3"
+          >
+            Signup
+          </Link>
+        </Col>
+      </Row>
+    </Container>
   );
 }

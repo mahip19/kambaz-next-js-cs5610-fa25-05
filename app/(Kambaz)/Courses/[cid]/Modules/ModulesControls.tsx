@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownToggle,
 } from "react-bootstrap";
-import { FaPlus } from "react-icons/fa6";
+import { FaBan, FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 
 export default function ModulesControls() {
@@ -36,9 +36,11 @@ export default function ModulesControls() {
             <GreenCheckmark /> Publish modules only
           </DropdownItem>
           <DropdownItem id="wd-unpublish-all-modules-and-items">
+            <FaBan className="me-2 fs-5" />
             Unpublish all modules and items
           </DropdownItem>
           <DropdownItem id="wd-unpublish-modules-only">
+            <FaBan className="me-2 fs-5" />
             Unpublish modules only
           </DropdownItem>
         </DropdownMenu>

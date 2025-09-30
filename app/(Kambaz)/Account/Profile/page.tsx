@@ -1,36 +1,79 @@
-import Link from "next/link";
+"use client"; // Required for using the useRouter hook
+
+import { useRouter } from "next/navigation";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  FormControl,
+} from "react-bootstrap";
+
 export default function Profile() {
+  const router = useRouter();
+
+  // Function to handle signout
+  const handleSignout = () => {
+    // Here you would typically handle sign-out logic (e.g., clear session)
+    // After signing out, navigate to the signin page:
+    router.push("/Account/Signin");
+  };
+
   return (
-    <div id="wd-profile-screen">
-      <h3>Profile</h3>
-      <input
-        defaultValue="raptor"
-        placeholder="username"
-        className="wd-username"
-      />
-      <br />
-      <input
-        defaultValue="123123213"
-        placeholder="password"
-        type="password"
-        className="wd-password"
-      />
-      <br />
-      <input defaultValue="Mahip" placeholder="First Name" id="wd-firstname" />
-      <br />
-      <input defaultValue="Parekh" placeholder="Last Name" id="wd-lastname" />
-      <br />
-      <input defaultValue="2000-11-01" type="date" id="wd-dob" />
-      <br />
-      <input defaultValue="mahip@parekh" type="email" id="wd-email" />
-      <br />
-      <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option> <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option>
-        <option value="STUDENT">Student</option>
-      </select>
-      <br />
-      <Link href="Signin"> Sign out </Link>
-    </div>
+    <Container>
+      <Row className="justify-content-center mt-5">
+        <Col xs={12} sm={8} md={6} lg={4}>
+          <h1 className="mb-4">Profile</h1>
+          <Form>
+            <Form.Group className="mb-3" controlId="wd-username">
+              <FormControl defaultValue="raptor" placeholder="username" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-password">
+              <FormControl
+                defaultValue="123123213"
+                placeholder="password"
+                type="password"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-firstname">
+              <FormControl defaultValue="Mahip" placeholder="First Name" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-lastname">
+              <FormControl defaultValue="Parekh" placeholder="Last Name" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-dob">
+              <FormControl defaultValue="2000-11-01" type="date" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-email">
+              <FormControl defaultValue="mahip@parekh" type="email" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="wd-role">
+              <Form.Select defaultValue="FACULTY">
+                <option value="USER">User</option>
+                <option value="ADMIN">Admin</option>
+                <option value="FACULTY">Faculty</option>
+                <option value="STUDENT">Student</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+
+          <Button
+            id="wd-signout-btn"
+            variant="danger" // Makes the button red
+            className="w-100 mt-3"
+            onClick={handleSignout}
+          >
+            Signout
+          </Button>
+        </Col>
+      </Row>
+    </Container>
   );
 }
