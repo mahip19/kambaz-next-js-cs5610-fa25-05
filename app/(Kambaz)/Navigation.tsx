@@ -7,6 +7,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
@@ -35,11 +36,12 @@ export default function KambazNavigation() {
 
       <ListGroupItem className="border-0 text-center p-0">
         <Link
-          href="/Account/Signin" // Use the base path for consistency
+          href="/Account/Signin"
           className={linkClass("/Account")}
           id="wd-account-link"
         >
-          <FaRegCircleUser className="fs-1" />
+          {/* 2. Use the solid icon and add an inline style to force its color to grey */}
+          <FaUserCircle className="fs-1" style={{ color: "grey" }} />
           <br />
           Account
         </Link>

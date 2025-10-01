@@ -14,6 +14,7 @@ export default function CourseNavigation() {
     { name: "Zoom", href: "/Courses/1234/Zoom" },
     { name: "Assignments", href: "/Courses/1234/Assignments" },
     { name: "Quizzes", href: "/Courses/1234/Quizzes" },
+    { name: "Grades", href: "/Courses/1234/Grades" },
     { name: "People", href: "/Courses/1234/People/Table" },
   ];
 
