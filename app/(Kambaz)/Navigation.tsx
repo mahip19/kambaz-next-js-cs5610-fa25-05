@@ -12,7 +12,7 @@ import { FaUserCircle } from "react-icons/fa";
 export default function KambazNavigation() {
   const pathname = usePathname();
 
-  // 💡 Updated logic to use startsWith()
+
   const linkClass = (path: string) =>
     pathname.startsWith(path)
       ? "bg-white text-danger text-decoration-none d-block py-2"
@@ -40,7 +40,7 @@ export default function KambazNavigation() {
           className={linkClass("/Account")}
           id="wd-account-link"
         >
-          {/* 2. Use the solid icon and add an inline style to force its color to grey */}
+          {/* the solid icon and add an inline style to force its color to grey */}
           <FaUserCircle className="fs-1" style={{ color: "grey" }} />
           <br />
           Account
