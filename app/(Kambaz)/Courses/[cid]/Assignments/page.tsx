@@ -16,7 +16,7 @@ export default function AssignmentList() {
   const assignments = db.assignments;
 
   // Filter assignments belonging to this course
-  const courseAssignments = assignments.filter((a: any) => a.course === cid);
+  const courseAssignments = assignments.filter((a) => a.course === cid);
 
   return (
     <div id="wd-assignments" className="p-3">
@@ -67,7 +67,7 @@ export default function AssignmentList() {
 
       {/* Dynamic assignment list */}
       <ListGroup id="wd-assignment-list" className="list-group-flush">
-        {courseAssignments.map((a: any) => (
+        {courseAssignments.map((a) => (
           <ListGroupItem
             key={a._id}
             className="d-flex p-0 border-0 border-bottom rounded-0"

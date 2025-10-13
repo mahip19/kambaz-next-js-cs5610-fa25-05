@@ -26,7 +26,7 @@ export default function CourseNavigation() {
         // Construct href dynamically using the course id
         let href = `/Courses/${cid}/${link}`;
         // Determine if this link should be highlighted
-        const isActive = pathname === href;
+        const isActive = pathname.startsWith(href);
         if (link == "People") {
           href += "/Table";
         }
