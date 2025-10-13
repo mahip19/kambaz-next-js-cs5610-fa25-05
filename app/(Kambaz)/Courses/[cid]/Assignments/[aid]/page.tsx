@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 
-import * as db from "../../../../Database"; // adjust the path if needed
+import * as db from "../../../../Database";
 
 // Static dropdown options (unchanged)
 const assignToOptions = [
@@ -19,14 +19,31 @@ const assignToOptions = [
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams(); // Get course + assignment IDs from route
-  const assignment = db.assignments.find((a: any) => a._id === aid);
+  const assignment = db.assignments.find((a) => a._id === aid);
+  // Convert DB dates to Date objects for DatePicker
+  const [dueDate, setDueDate] = useState<Date | null>(
+    assignment?.dueDate ? new Date(assignment?.dueDate) : null
+  );
+  const [availableFromDate, setAvailableFromDate] = useState<Date | null>(
+    assignment?.availableFrom ? new Date(assignment?.availableFrom) : null
+  );
+  const [untilDate, setUntilDate] = useState<Date | null>(
+    assignment?.untilDate ? new Date(assignment?.untilDate) : null
+  );
 
+  const [selectedOptions, setSelectedOptions] = useState(
+    assignment?.assignTo?.map((label: string) => ({
+      value: label.toLowerCase().replace(/\s+/g, ""),
+      label: label,
+    })) || [assignToOptions[0]]
+  );
   if (!assignment) {
     return (
       <div className="p-3">
         <h4 className="text-danger">Assignment not found</h4>
         <p>
-          No assignment found for ID "{aid}" in course "{cid}".
+          No assignment found for ID &quot;{aid}&quot; in course &quot;{cid}
+          &quot;.
         </p>
         <Link
           href={`/Courses/${cid}/Assignments`}
@@ -37,24 +54,6 @@ export default function AssignmentEditor() {
       </div>
     );
   }
-
-  // Convert DB dates to Date objects for DatePicker
-  const [dueDate, setDueDate] = useState<Date | null>(
-    assignment.dueDate ? new Date(assignment.dueDate) : null
-  );
-  const [availableFromDate, setAvailableFromDate] = useState<Date | null>(
-    assignment.availableFrom ? new Date(assignment.availableFrom) : null
-  );
-  const [untilDate, setUntilDate] = useState<Date | null>(
-    assignment.untilDate ? new Date(assignment.untilDate) : null
-  );
-
-  const [selectedOptions, setSelectedOptions] = useState(
-    assignment.assignTo?.map((label: string) => ({
-      value: label.toLowerCase().replace(/\s+/g, ""),
-      label: label,
-    })) || [assignToOptions[0]]
-  );
 
   return (
     <div id="wd-assignments-editor" className="p-3">
