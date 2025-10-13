@@ -14,7 +14,6 @@ import {
 export default function Signin() {
   const router = useRouter();
 
-  // Function to handle form submission
   const handleSignin = (event: React.FormEvent) => {
     event.preventDefault(); // Prevent the default form submission behavior
     // Here you would typically handle authentication logic
@@ -29,11 +28,15 @@ export default function Signin() {
           <h1 className="mb-4">Signin</h1>
           <Form onSubmit={handleSignin}>
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" />
+              <FormControl placeholder="username" defaultValue={"raptor"} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-password">
-              <FormControl placeholder="password" type="password" />
+              <FormControl
+                placeholder="password"
+                defaultValue={"123123123"}
+                type="password"
+              />
             </Form.Group>
 
             <Button

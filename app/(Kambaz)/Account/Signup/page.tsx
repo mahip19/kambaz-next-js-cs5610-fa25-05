@@ -29,11 +29,15 @@ export default function Signup() {
           <h1 className="mb-4">Signup</h1>
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" />
+              <FormControl placeholder="username" defaultValue={"raptor"} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-password">
-              <FormControl placeholder="password" type="password" />
+              <FormControl
+                placeholder="password"
+                type="password"
+                defaultValue={"123123123"}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-verify-password">
