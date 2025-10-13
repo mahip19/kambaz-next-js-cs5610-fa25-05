@@ -31,12 +31,19 @@ export default function AssignmentEditor() {
     assignment?.untilDate ? new Date(assignment?.untilDate) : null
   );
 
-  const [selectedOptions, setSelectedOptions] = useState(
+  type AssignOption = {
+    value: string;
+    label: string;
+  };
+
+  // State for selected options
+  const [selectedOptions, setSelectedOptions] = useState<AssignOption[]>(
     assignment?.assignTo?.map((label: string) => ({
       value: label.toLowerCase().replace(/\s+/g, ""),
       label: label,
     })) || [assignToOptions[0]]
   );
+
   if (!assignment) {
     return (
       <div className="p-3">
@@ -158,7 +165,7 @@ export default function AssignmentEditor() {
               options={assignToOptions}
               classNamePrefix="select"
               placeholder="Select..."
-              onChange={(opts) => setSelectedOptions(opts as any)}
+              onChange={(opts) => setSelectedOptions(opts as AssignOption[])}
             />
           </div>
 
