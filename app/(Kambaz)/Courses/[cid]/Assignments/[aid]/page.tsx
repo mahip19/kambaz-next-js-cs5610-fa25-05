@@ -1,10 +1,15 @@
 "use client";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 
+import * as db from "../../../../Database"; // adjust the path if needed
+
+// Static dropdown options (unchanged)
 const assignToOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "section1", label: "Section 1" },
@@ -13,39 +18,58 @@ const assignToOptions = [
 ];
 
 export default function AssignmentEditor() {
-  const [selectedOptions, setSelectedOptions] = useState([assignToOptions[0]]);
+  const { cid, aid } = useParams(); // Get course + assignment IDs from route
+  const assignment = db.assignments.find((a: any) => a._id === aid);
+
+  if (!assignment) {
+    return (
+      <div className="p-3">
+        <h4 className="text-danger">Assignment not found</h4>
+        <p>
+          No assignment found for ID "{aid}" in course "{cid}".
+        </p>
+        <Link
+          href={`/Courses/${cid}/Assignments`}
+          className="btn btn-secondary mt-3"
+        >
+          Back to Assignments
+        </Link>
+      </div>
+    );
+  }
+
+  // Convert DB dates to Date objects for DatePicker
   const [dueDate, setDueDate] = useState<Date | null>(
-    new Date("2024-05-13T23:59:00")
+    assignment.dueDate ? new Date(assignment.dueDate) : null
   );
   const [availableFromDate, setAvailableFromDate] = useState<Date | null>(
-    new Date("2024-05-06T00:00:00")
+    assignment.availableFrom ? new Date(assignment.availableFrom) : null
   );
-  const [untilDate, setUntilDate] = useState<Date | null>(null);
+  const [untilDate, setUntilDate] = useState<Date | null>(
+    assignment.untilDate ? new Date(assignment.untilDate) : null
+  );
+
+  const [selectedOptions, setSelectedOptions] = useState(
+    assignment.assignTo?.map((label: string) => ({
+      value: label.toLowerCase().replace(/\s+/g, ""),
+      label: label,
+    })) || [assignToOptions[0]]
+  );
 
   return (
     <div id="wd-assignments-editor" className="p-3">
       {/* Assignment Name */}
       <Form.Group className="mb-3">
         <Form.Label>Assignment Name</Form.Label>
-        <Form.Control type="text" defaultValue="A1" />
+        <Form.Control type="text" defaultValue={assignment.title} />
       </Form.Group>
 
       {/* Description */}
       <Form.Group className="mb-3">
-        <Form.Control
-          as="textarea"
-          rows={6}
-          defaultValue={`The assignment is available online
-
-Submit a link to the landing page of your Web application running on Netlify.
-
-The landing page should include the following:
-• Your full name and section
-• Links to each of the lab assignments
-• Link to the Kanbas application
-• Links to all relevant source code repositories
-
-The Kanbas application should include a link to navigate back to the landing page.`}
+        <div
+          className="form-control"
+          style={{ minHeight: "200px", whiteSpace: "pre-line" }}
+          dangerouslySetInnerHTML={{ __html: assignment.description }}
         />
       </Form.Group>
 
@@ -55,7 +79,7 @@ The Kanbas application should include a link to navigate back to the landing pag
           Points
         </Form.Label>
         <Col sm={4}>
-          <Form.Control type="number" defaultValue={100} />
+          <Form.Control type="number" defaultValue={assignment.points} />
         </Col>
       </Form.Group>
 
@@ -65,7 +89,7 @@ The Kanbas application should include a link to navigate back to the landing pag
           Assignment Group
         </Form.Label>
         <Col sm={4}>
-          <Form.Select defaultValue="ASSIGNMENTS">
+          <Form.Select defaultValue={assignment.group}>
             <option>ASSIGNMENTS</option>
             <option>QUIZZES</option>
             <option>EXAMS</option>
@@ -74,13 +98,13 @@ The Kanbas application should include a link to navigate back to the landing pag
         </Col>
       </Form.Group>
 
-      {/* Display Grade as */}
+      {/* Display Grade As */}
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={2}>
           Display Grade as
         </Form.Label>
         <Col sm={4}>
-          <Form.Select defaultValue="Percentage">
+          <Form.Select defaultValue={assignment.displayGradeAs}>
             <option>Percentage</option>
             <option>Points</option>
             <option>Complete/Incomplete</option>
@@ -94,37 +118,48 @@ The Kanbas application should include a link to navigate back to the landing pag
           Submission Type
         </Form.Label>
         <Col sm={4} className="mt-2 p-3 border rounded">
-          <Form.Select defaultValue="Online">
+          <Form.Select defaultValue={assignment.submissionType}>
             <option>Online</option>
             <option>On Paper</option>
             <option>No Submission</option>
           </Form.Select>
+
           <div className="mt-2">
             <div className="fw-bold">Online Entry Options</div>
-            <Form.Check type="checkbox" label="Text Entry" />
-            <Form.Check type="checkbox" label="Website URL" defaultChecked />
-            <Form.Check type="checkbox" label="Media Recordings" />
-            <Form.Check type="checkbox" label="Student Annotation" />
-            <Form.Check type="checkbox" label="File Uploads" />
+            {[
+              "Text Entry",
+              "Website URL",
+              "Media Recordings",
+              "Student Annotation",
+              "File Uploads",
+            ].map((option) => (
+              <Form.Check
+                key={option}
+                type="checkbox"
+                label={option}
+                defaultChecked={assignment.onlineEntryOptions?.includes(option)}
+              />
+            ))}
           </div>
         </Col>
       </Form.Group>
 
-      {/* Assign To */}
+      {/* Assign Section */}
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={2}>
           Assign
         </Form.Label>
         <Col sm={6} className="p-3 border rounded">
-          {/* Assign to Dropdown */}
+          {/* Assign To */}
           <div className="mb-3">
             <Form.Label>Assign to</Form.Label>
             <Select
-              defaultValue={[assignToOptions[0]]}
+              defaultValue={selectedOptions}
               isMulti
               options={assignToOptions}
               classNamePrefix="select"
               placeholder="Select..."
+              onChange={(opts) => setSelectedOptions(opts as any)}
             />
           </div>
 
@@ -140,7 +175,7 @@ The Kanbas application should include a link to navigate back to the landing pag
             />
           </div>
 
-          {/* Available From and Until side-by-side */}
+          {/* Available From and Until */}
           <Row>
             <Col>
               <Form.Label className="d-block">Available from</Form.Label>
@@ -169,10 +204,15 @@ The Kanbas application should include a link to navigate back to the landing pag
 
       {/* Buttons */}
       <div className="d-flex justify-content-end mt-4">
-        <Button variant="secondary" className="me-2">
+        <Link
+          href={`/Courses/${cid}/Assignments`}
+          className="btn btn-secondary me-2"
+        >
           Cancel
-        </Button>
-        <Button variant="danger">Save</Button>
+        </Link>
+        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-danger">
+          Save
+        </Link>
       </div>
     </div>
   );

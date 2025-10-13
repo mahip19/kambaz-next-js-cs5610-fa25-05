@@ -12,7 +12,14 @@ import { FaUserCircle } from "react-icons/fa";
 export default function KambazNavigation() {
   const pathname = usePathname();
 
-  // 💡 Updated logic to use startsWith()
+  const links = [
+    { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard },
+    { label: "Courses", path: "/Dashboard", icon: LiaBookSolid },
+    { label: "Calendar", path: "/Calendar", icon: IoCalendarOutline },
+    { label: "Inbox", path: "/Inbox", icon: FaInbox },
+    { label: "Labs", path: "/Labs", icon: LiaCogSolid },
+  ];
+
   const linkClass = (path: string) =>
     pathname.startsWith(path)
       ? "bg-white text-danger text-decoration-none d-block py-2"
@@ -20,84 +27,54 @@ export default function KambazNavigation() {
 
   return (
     <ListGroup
-      className="rounded-0 position-fixed bottom-0 top-0 bg-black z-2"
-      style={{ width: 120 }}
       id="wd-kambaz-navigation"
+      style={{ width: 120 }}
+      className="rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2"
     >
       <ListGroupItem
-        className="bg-black border-0 text-center"
-        as="a"
+        id="wd-neu-link"
         target="_blank"
         href="https://www.northeastern.edu/"
-        id="wd-neu-link"
+        action
+        className="bg-black border-0 text-center"
       >
-        <img src="/images/NEU.png" width="75px" alt="Northeastern University" />
+        <img src="/images/NEU.png" width="75px" />
       </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link
-          href="/Account/Signin"
-          className={linkClass("/Account")}
-          id="wd-account-link"
+      <ListGroupItem
+        as={Link}
+        href="/Account"
+        className={`text-center border-0 bg-black
+            ${
+              pathname.includes("Account")
+                ? "bg-white text-danger"
+                : "bg-black text-white"
+            }`}
+      >
+        <FaRegCircleUser
+          className={`fs-1 ${
+            pathname.includes("Account") ? "text-danger" : "text-white"
+          }`}
+        />
+        <br />
+        Account
+      </ListGroupItem>
+      {links.map((link) => (
+        <ListGroupItem
+          key={link.path}
+          as={Link}
+          href={link.path}
+          className={`bg-black text-center border-0
+              ${
+                pathname.includes(link.label)
+                  ? "text-danger bg-white"
+                  : "text-white bg-black"
+              }`}
         >
-          {/* 2. Use the solid icon and add an inline style to force its color to grey */}
-          <FaUserCircle className="fs-1" style={{ color: "grey" }} />
+          {link.icon({ className: "fs-1 text-danger" })}
           <br />
-          Account
-        </Link>
-      </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link
-          href="/Dashboard"
-          className={linkClass("/Dashboard")}
-          id="wd-dashboard-link"
-        >
-          <AiOutlineDashboard className="fs-1" />
-          <br />
-          Dashboard
-        </Link>
-      </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link
-          href="/Dashboard"
-          className={linkClass("/Courses")}
-          id="wd-courses-link"
-        >
-          <LiaBookSolid className="fs-1" />
-          <br />
-          Courses
-        </Link>
-      </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link
-          href="/Calendar"
-          className={linkClass("/Calendar")}
-          id="wd-calendar-link"
-        >
-          <IoCalendarOutline className="fs-1" />
-          <br />
-          Calendar
-        </Link>
-      </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link href="/Inbox" className={linkClass("/Inbox")} id="wd-inbox-link">
-          <FaInbox className="fs-1" />
-          <br />
-          Inbox
-        </Link>
-      </ListGroupItem>
-
-      <ListGroupItem className="border-0 text-center p-0">
-        <Link href="/Labs" className={linkClass("/Labs")} id="wd-labs-link">
-          <LiaCogSolid className="fs-1" />
-          <br />
-          Labs
-        </Link>
-      </ListGroupItem>
+          {link.label}
+        </ListGroupItem>
+      ))}
     </ListGroup>
   );
 }

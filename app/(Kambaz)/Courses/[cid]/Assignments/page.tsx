@@ -7,53 +7,24 @@ import { PiNotePencil } from "react-icons/pi";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { VscTriangleDown } from "react-icons/vsc";
+import { useParams } from "next/navigation";
 
-type Assignment = {
-  id: string;
-  title: string;
-  href: string;
-  notAvailableUntil: string;
-  due: string;
-  points: number;
-};
-
-const ASSIGNMENTS: Assignment[] = [
-  {
-    id: "123",
-    title: "A1",
-    href: "/Courses/1234/Assignments/123",
-    notAvailableUntil: "May 6 at 12:00am",
-    due: "May 13 at 11:59pm",
-    points: 100,
-  },
-  {
-    id: "124",
-    title: "A2",
-    href: "/Courses/1234/Assignments/124",
-    notAvailableUntil: "May 13 at 12:00am",
-    due: "May 20 at 11:59pm",
-    points: 100,
-  },
-  {
-    id: "125",
-    title: "A3",
-    href: "/Courses/1234/Assignments/125",
-    notAvailableUntil: "May 20 at 12:00am",
-    due: "May 27 at 11:59pm",
-    points: 100,
-  },
-];
+import * as db from "../../../Database";
 
 export default function AssignmentList() {
+  const { cid } = useParams();
+  const assignments = db.assignments;
+
+  // Filter assignments belonging to this course
+  const courseAssignments = assignments.filter((a: any) => a.course === cid);
+
   return (
     <div id="wd-assignments" className="p-3">
       {/* Top controls */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         {/* Search bar */}
         <div className="position-relative" style={{ maxWidth: "300px" }}>
-          {/* Magnifying glass inside the input */}
           <BsSearch className="position-absolute top-50 start-0 translate-middle-y ms-2 text-muted" />
-          {/* Input with left padding so text doesn't overlap icon */}
           <Form.Control
             type="text"
             placeholder="Search..."
@@ -61,6 +32,7 @@ export default function AssignmentList() {
             className="ps-5"
           />
         </div>
+
         {/* Action buttons */}
         <div>
           <Button
@@ -76,6 +48,8 @@ export default function AssignmentList() {
           </Button>
         </div>
       </div>
+
+      {/* Section header */}
       <div className="d-flex justify-content-between align-items-center bg-light border p-2">
         <div className="d-flex align-items-center">
           <BsGripVertical className="me-3 fs-4 text-muted" />
@@ -90,10 +64,12 @@ export default function AssignmentList() {
           <IoEllipsisVertical className="fs-4 text-muted" />
         </div>
       </div>
+
+      {/* Dynamic assignment list */}
       <ListGroup id="wd-assignment-list" className="list-group-flush">
-        {ASSIGNMENTS.map((a) => (
+        {courseAssignments.map((a: any) => (
           <ListGroupItem
-            key={a.id}
+            key={a._id}
             className="d-flex p-0 border-0 border-bottom rounded-0"
           >
             {/* left green bar */}
@@ -109,7 +85,7 @@ export default function AssignmentList() {
 
               <div className="flex-grow-1">
                 <Link
-                  href={a.href}
+                  href={`/Courses/${cid}/Assignments/${a._id}`}
                   className="fw-bold text-decoration-none text-dark"
                 >
                   {a.title}
@@ -117,8 +93,8 @@ export default function AssignmentList() {
 
                 <div className="text-muted small">
                   <span className="text-danger">Multiple Modules</span> |{" "}
-                  <b>Not available until</b> {a.notAvailableUntil} |<br />
-                  <b>Due</b> {a.due} | <b>{a.points} pts</b>
+                  <b>Not available until</b> May 6 at 12:00am | <br />
+                  <b>Due</b> May 13 at 11:59pm | <b>100 pts</b>
                 </div>
               </div>
 

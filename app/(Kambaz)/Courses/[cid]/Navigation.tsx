@@ -1,38 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import "../../styles.css";
 
 export default function CourseNavigation() {
   const pathname = usePathname();
-
+  const params = useParams(); // get dynamic route parameter
+  const { cid } = params; // course ID from /Courses/[cid]/...
+  console.log("in courses nav", params);
   const links = [
-    { name: "Home", href: "/Courses/1234/Home" },
-    { name: "Modules", href: "/Courses/1234/Modules" },
-    { name: "Piazza", href: "/Courses/1234/Piazza" },
-    { name: "Zoom", href: "/Courses/1234/Zoom" },
-    { name: "Assignments", href: "/Courses/1234/Assignments" },
-    { name: "Quizzes", href: "/Courses/1234/Quizzes" },
-    { name: "Grades", href: "/Courses/1234/Grades" },
-    { name: "People", href: "/Courses/1234/People/Table" },
+    "Home",
+    "Modules",
+    "Piazza",
+    "Zoom",
+    "Assignments",
+    "Quizzes",
+    "Grades",
+    "People",
   ];
 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link, index) => (
-        <Link
-          key={index}
-          href={link.href}
-          id={`wd-course-${link.name.toLowerCase()}-link`}
-          // Change "wd-active-link" back to "active"
-          className={`list-group-item border-0 ${
-            pathname.includes(link.name) ? "active" : "text-danger"
-          }`}
-        >
-          {link.name}
-        </Link>
-      ))}
+      {links.map((link, index) => {
+        // Construct href dynamically using the course id
+        let href = `/Courses/${cid}/${link}`;
+        // Determine if this link should be highlighted
+        const isActive = pathname === href;
+        if (link == "People") {
+          href += "/Table";
+        }
+        return (
+          <Link
+            key={index}
+            href={href}
+            id={`wd-course-${link.toLowerCase()}-link`}
+            className={`list-group-item border-0 ${
+              isActive ? "active" : "text-danger"
+            }`}
+          >
+            {link}
+          </Link>
+        );
+      })}
     </div>
   );
 }
