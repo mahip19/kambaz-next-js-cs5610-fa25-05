@@ -1,6 +1,8 @@
 "use client";
 
-import { ReactNode, use } from "react";
+import { ReactNode, use, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "next/navigation";
 import CourseNavigation from "./Navigation";
 import { FaAlignJustify } from "react-icons/fa";
 import { courses } from "../../Database";
@@ -8,18 +10,30 @@ import Breadcrumb from "./Breadcrumb";
 import { Dropdown } from "react-bootstrap";
 import { FaBars } from "react-icons/fa";
 
-export default function CoursesLayout({
-  children,
-  params,
-}: Readonly<{ children: ReactNode; params: Promise<{ cid: string }> }>) {
-  const { cid } = use(params);
-  const course = courses.find((course) => course._id == cid);
+export default function CoursesLayout({ children }: { children: ReactNode }) {
+  const { cid } = useParams();
+  const { courses } = useSelector((state: any) => state.coursesReducer);
+  const course = courses.find((course: any) => course._id === cid);
+
+  // State to control sidebar visibility
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  // Toggle sidebar function
+  const toggleSidebar = () => {
+    console.log(isSidebarVisible);
+    setIsSidebarVisible(!isSidebarVisible);
+  };
 
   return (
     <div id="wd-courses" className="position-relative">
       <h2 className="text-danger">
-        <FaAlignJustify className="me-4 fs-4 mb-1" />
+        <FaAlignJustify
+          className="me-4 fs-4 mb-1"
+          onClick={toggleSidebar}
+          style={{ cursor: "pointer" }}
+        />
         <Breadcrumb course={course} />
+        {/* {course?.name} */}
       </h2>
       <hr />
 
@@ -42,8 +56,8 @@ export default function CoursesLayout({
       </Dropdown>
 
       <div className="d-flex">
-        {/* Desktop Sidebar */}
-        <div className="d-none d-md-block">
+        {/* Desktop Sidebar - conditionally rendered based on state */}
+        <div className={isSidebarVisible ? "d-none d-md-block" : "d-none"}>
           <CourseNavigation />
         </div>
         <div className="flex-fill">{children}</div>

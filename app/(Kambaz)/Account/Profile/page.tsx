@@ -1,6 +1,9 @@
-"use client"; // Required for using the useRouter hook
+"use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser } from "../reducer";
 import {
   Container,
   Row,
@@ -12,63 +15,117 @@ import {
 
 export default function Profile() {
   const router = useRouter();
+  const [profile, setProfile] = useState<any>({});
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-  // Function to handle signout
-  const handleSignout = () => {
-    // Here you would typically handle sign-out logic (e.g., clear session)
-    // After signing out, navigate to the signin page:
+  const fetchProfile = () => {
+    if (!currentUser) {
+      router.push("/Account/Signin");
+      return;
+    }
+    setProfile(currentUser);
+  };
+
+  const signout = () => {
+    dispatch(setCurrentUser(null));
     router.push("/Account/Signin");
   };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   return (
     <Container>
       <Row className="justify-content-center mt-5">
         <Col xs={12} sm={8} md={6} lg={4}>
           <h1 className="mb-4">Profile</h1>
-          <Form>
-            <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl defaultValue="raptor" placeholder="username" />
-            </Form.Group>
+          {profile && (
+            <Form>
+              <Form.Group className="mb-3" controlId="wd-username">
+                <FormControl
+                  value={profile.username || ""}
+                  placeholder="username"
+                  onChange={(e) =>
+                    setProfile({ ...profile, username: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-password">
-              <FormControl
-                defaultValue="123123213"
-                placeholder="password"
-                type="password"
-              />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="wd-password">
+                <FormControl
+                  value={profile.password || ""}
+                  placeholder="password"
+                  type="password"
+                  onChange={(e) =>
+                    setProfile({ ...profile, password: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-firstname">
-              <FormControl defaultValue="Mahip" placeholder="First Name" />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="wd-firstname">
+                <FormControl
+                  value={profile.firstName || ""}
+                  placeholder="First Name"
+                  onChange={(e) =>
+                    setProfile({ ...profile, firstName: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-lastname">
-              <FormControl defaultValue="Parekh" placeholder="Last Name" />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="wd-lastname">
+                <FormControl
+                  value={profile.lastName || ""}
+                  placeholder="Last Name"
+                  onChange={(e) =>
+                    setProfile({ ...profile, lastName: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-dob">
-              <FormControl defaultValue="2000-11-01" type="date" />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="wd-dob">
+                <FormControl
+                  value={profile.dob || ""}
+                  type="date"
+                  onChange={(e) =>
+                    setProfile({ ...profile, dob: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-email">
-              <FormControl defaultValue="mahip@parekh" type="email" />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="wd-email">
+                <FormControl
+                  value={profile.email || ""}
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) =>
+                    setProfile({ ...profile, email: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="wd-role">
-              <Form.Select defaultValue="FACULTY">
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
-                <option value="FACULTY">Faculty</option>
-                <option value="STUDENT">Student</option>
-              </Form.Select>
-            </Form.Group>
-          </Form>
+              <Form.Group className="mb-3" controlId="wd-role">
+                <Form.Select
+                  value={profile.role || "USER"}
+                  onChange={(e) =>
+                    setProfile({ ...profile, role: e.target.value })
+                  }
+                >
+                  <option value="USER">User</option>
+                  <option value="ADMIN">Admin</option>
+                  <option value="FACULTY">Faculty</option>
+                  <option value="STUDENT">Student</option>
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          )}
 
           <Button
             id="wd-signout-btn"
-            variant="danger" // Makes the button red
+            variant="danger"
             className="w-100 mt-3"
-            onClick={handleSignout}
+            onClick={signout}
           >
             Signout
           </Button>

@@ -1,24 +1,40 @@
-"use client"; // Required for using the useRouter hook
-
+"use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Changed import
+import { setCurrentUser } from "../reducer";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import * as db from "../../Database";
 import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
   FormControl,
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
 } from "react-bootstrap";
 
 export default function Signin() {
-  const router = useRouter();
+  const [credentials, setCredentials] = useState<any>({});
+  const dispatch = useDispatch();
+  const router = useRouter(); // Use router instead of redirect
 
-  const handleSignin = (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-    // Here you would typically handle authentication logic
-    // After successful sign-in, navigate to the profile page:
-    router.push("/Account/Profile");
+  const signin = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent form submission/page refresh
+
+    const user = db.users.find(
+      (u: any) =>
+        u.username === credentials.username &&
+        u.password === credentials.password
+    );
+
+    if (!user) {
+      alert("Invalid credentials");
+      return;
+    }
+
+    dispatch(setCurrentUser(user));
+    router.push("/Dashboard"); // Use router.push instead of redirect
   };
 
   return (
@@ -26,25 +42,33 @@ export default function Signin() {
       <Row className="justify-content-center mt-5">
         <Col xs={12} sm={8} md={6} lg={4}>
           <h1 className="mb-4">Signin</h1>
-          <Form onSubmit={handleSignin}>
+          <Form onSubmit={signin}>
+            {" "}
+            {/* Add onSubmit to form */}
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" defaultValue={"raptor"} />
+              <FormControl
+                value={credentials.username || ""} // Changed to value
+                onChange={(e) =>
+                  setCredentials({ ...credentials, username: e.target.value })
+                }
+                placeholder="username"
+              />
             </Form.Group>
-
             <Form.Group className="mb-3" controlId="wd-password">
               <FormControl
+                value={credentials.password || ""} // Changed to value
+                onChange={(e) =>
+                  setCredentials({ ...credentials, password: e.target.value })
+                }
                 placeholder="password"
-                defaultValue={"123123123"}
                 type="password"
               />
             </Form.Group>
-
             <Button
               id="wd-signin-btn"
               variant="primary"
               type="submit"
               className="w-100"
-              href="/Dashboard"
             >
               Signin
             </Button>
