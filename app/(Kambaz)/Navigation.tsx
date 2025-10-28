@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { FaUserCircle } from "react-icons/fa";
+import { ListGroup, ListGroupItem, Offcanvas } from "react-bootstrap";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const links = [
     { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard },
@@ -20,17 +24,8 @@ export default function KambazNavigation() {
     { label: "Labs", path: "/Labs", icon: LiaCogSolid },
   ];
 
-  const linkClass = (path: string) =>
-    pathname.startsWith(path)
-      ? "bg-white text-danger text-decoration-none d-block py-2"
-      : "bg-black text-white text-decoration-none d-block py-2";
-
-  return (
-    <ListGroup
-      id="wd-kambaz-navigation"
-      style={{ width: 120 }}
-      className="rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2"
-    >
+  const NavigationContent = () => (
+    <ListGroup className="rounded-0 h-100 bg-black">
       <ListGroupItem
         id="wd-neu-link"
         target="_blank"
@@ -38,17 +33,18 @@ export default function KambazNavigation() {
         action
         className="bg-black border-0 text-center"
       >
-        <img src="/images/NEU.png" width="75px" />
+        <img src="/images/NEU.png" width="75px" alt="NEU Logo" />
       </ListGroupItem>
       <ListGroupItem
         as={Link}
         href="/Account"
+        onClick={handleClose}
         className={`text-center border-0 bg-black
-            ${
-              pathname.includes("Account")
-                ? "bg-white text-danger"
-                : "bg-black text-white"
-            }`}
+          ${
+            pathname.includes("Account")
+              ? "bg-white text-danger"
+              : "bg-black text-white"
+          }`}
       >
         <FaRegCircleUser
           className={`fs-1 ${
@@ -63,12 +59,13 @@ export default function KambazNavigation() {
           key={link.path}
           as={Link}
           href={link.path}
+          onClick={handleClose}
           className={`bg-black text-center border-0
-              ${
-                pathname.includes(link.label)
-                  ? "text-danger bg-white"
-                  : "text-white bg-black"
-              }`}
+            ${
+              pathname.includes(link.label)
+                ? "text-danger bg-white"
+                : "text-white bg-black"
+            }`}
         >
           {link.icon({ className: "fs-1 text-danger" })}
           <br />
@@ -76,5 +73,41 @@ export default function KambazNavigation() {
         </ListGroupItem>
       ))}
     </ListGroup>
+  );
+
+  return (
+    <>
+      {/* Mobile Hamburger Button */}
+      <button
+        className="btn d-md-none position-fixed top-0 start-0 m-3"
+        onClick={handleShow}
+        style={{ zIndex: 1000 }}
+        aria-label="Toggle navigation"
+      >
+        <span style={{ fontSize: "1.5rem" }}>☰</span>
+      </button>
+
+      {/* Mobile Offcanvas */}
+      <Offcanvas
+        show={show}
+        onHide={handleClose}
+        placement="start"
+        className="d-md-none"
+        style={{ width: 120 }}
+      >
+        <Offcanvas.Body className="p-0 bg-black">
+          <NavigationContent />
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      {/* Desktop Sidebar */}
+      <div
+        id="wd-kambaz-navigation"
+        style={{ width: 120 }}
+        className="position-fixed bottom-0 top-0 d-none d-md-block bg-black"
+      >
+        <NavigationContent />
+      </div>
+    </>
   );
 }

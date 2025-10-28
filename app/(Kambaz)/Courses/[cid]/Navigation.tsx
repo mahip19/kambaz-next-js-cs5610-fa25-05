@@ -1,45 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useParams } from "next/navigation";
-import "../../styles.css";
+import { usePathname } from "next/navigation";
 
 export default function CourseNavigation() {
   const pathname = usePathname();
-  const params = useParams(); // get dynamic route parameter
-  const { cid } = params; // course ID from /Courses/[cid]/...
-  console.log("in courses nav", params);
+
   const links = [
-    "Home",
-    "Modules",
-    "Piazza",
-    "Zoom",
-    "Assignments",
-    "Quizzes",
-    "Grades",
-    "People",
+    { name: "Home", path: "Home" },
+    { name: "Modules", path: "Modules" },
+    { name: "Piazza", path: "Piazza" },
+    { name: "Zoom Meetings", path: "Zoom" },
+    { name: "Assignments", path: "Assignments" },
+    { name: "Quizzes", path: "Quizzes" },
+    { name: "Grades", path: "Grades" },
+    { name: "People", path: "People" },
+    { name: "Settings", path: "Settings" },
   ];
 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link, index) => {
-        // Construct href dynamically using the course id
-        let href = `/Courses/${cid}/${link}`;
-        // Determine if this link should be highlighted
-        const isActive = pathname.startsWith(href);
-        if (link == "People") {
-          href += "/Table";
-        }
+      {links.map((link) => {
+        const isActive = pathname.includes(link.path);
         return (
           <Link
-            key={index}
-            href={href}
-            id={`wd-course-${link.toLowerCase()}-link`}
-            className={`list-group-item border-0 ${
-              isActive ? "active" : "text-danger"
+            key={link.path}
+            href={link.path}
+            className={`list-group-item border border-0 ${
+              isActive ? "active text-black" : "text-danger"
             }`}
           >
-            {link}
+            {link.name}
           </Link>
         );
       })}
