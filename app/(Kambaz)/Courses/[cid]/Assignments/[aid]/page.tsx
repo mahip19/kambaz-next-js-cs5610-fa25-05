@@ -1,15 +1,15 @@
 "use client";
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSelector, useDispatch } from "react-redux";
+import { addAssignment, updateAssignment } from "./reducer";
 
-import * as db from "../../../../Database";
-
-// Static dropdown options (unchanged)
+// Static dropdown options
 const assignToOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "section1", label: "Section 1" },
@@ -18,17 +18,48 @@ const assignToOptions = [
 ];
 
 export default function AssignmentEditor() {
-  const { cid, aid } = useParams(); // Get course + assignment IDs from route
-  const assignment = db.assignments.find((a) => a._id === aid);
-  // Convert DB dates to Date objects for DatePicker
+  const { cid, aid } = useParams();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+
+  // Check if creating new assignment or editing existing
+  const isNewAssignment = aid === "new";
+  const existingAssignment = isNewAssignment
+    ? null
+    : assignments.find((a: any) => a._id === aid);
+
+  // Form state
+  const [title, setTitle] = useState(existingAssignment?.title || "");
+  const [description, setDescription] = useState(
+    existingAssignment?.description || ""
+  );
+  const [points, setPoints] = useState(existingAssignment?.points || 100);
+  const [group, setGroup] = useState(
+    existingAssignment?.group || "ASSIGNMENTS"
+  );
+  const [displayGradeAs, setDisplayGradeAs] = useState(
+    existingAssignment?.displayGradeAs || "Percentage"
+  );
+  const [submissionType, setSubmissionType] = useState(
+    existingAssignment?.submissionType || "Online"
+  );
+  const [onlineEntryOptions, setOnlineEntryOptions] = useState<string[]>(
+    existingAssignment?.onlineEntryOptions || []
+  );
+
   const [dueDate, setDueDate] = useState<Date | null>(
-    assignment?.dueDate ? new Date(assignment?.dueDate) : null
+    existingAssignment?.dueDate ? new Date(existingAssignment.dueDate) : null
   );
   const [availableFromDate, setAvailableFromDate] = useState<Date | null>(
-    assignment?.availableFrom ? new Date(assignment?.availableFrom) : null
+    existingAssignment?.availableFrom
+      ? new Date(existingAssignment.availableFrom)
+      : null
   );
   const [untilDate, setUntilDate] = useState<Date | null>(
-    assignment?.untilDate ? new Date(assignment?.untilDate) : null
+    existingAssignment?.untilDate
+      ? new Date(existingAssignment.untilDate)
+      : null
   );
 
   type AssignOption = {
@@ -36,15 +67,52 @@ export default function AssignmentEditor() {
     label: string;
   };
 
-  // State for selected options
   const [selectedOptions, setSelectedOptions] = useState<AssignOption[]>(
-    assignment?.assignTo?.map((label: string) => ({
+    existingAssignment?.assignTo?.map((label: string) => ({
       value: label.toLowerCase().replace(/\s+/g, ""),
       label: label,
     })) || [assignToOptions[0]]
   );
 
-  if (!assignment) {
+  const handleCheckboxChange = (option: string) => {
+    setOnlineEntryOptions((prev) =>
+      prev.includes(option)
+        ? prev.filter((o) => o !== option)
+        : [...prev, option]
+    );
+  };
+
+  const handleSave = () => {
+    const assignmentData = {
+      _id: existingAssignment?._id,
+      title,
+      course: cid,
+      description,
+      points,
+      dueDate: dueDate?.toISOString() || "",
+      availableFrom: availableFromDate?.toISOString() || "",
+      untilDate: untilDate?.toISOString() || "",
+      group,
+      displayGradeAs,
+      submissionType,
+      assignTo: selectedOptions.map((opt) => opt.label),
+      onlineEntryOptions,
+    };
+
+    if (isNewAssignment) {
+      dispatch(addAssignment(assignmentData));
+    } else {
+      dispatch(updateAssignment(assignmentData));
+    }
+
+    router.push(`/Courses/${cid}/Assignments`);
+  };
+
+  const handleCancel = () => {
+    router.push(`/Courses/${cid}/Assignments`);
+  };
+
+  if (!isNewAssignment && !existingAssignment) {
     return (
       <div className="p-3">
         <h4 className="text-danger">Assignment not found</h4>
@@ -67,15 +135,21 @@ export default function AssignmentEditor() {
       {/* Assignment Name */}
       <Form.Group className="mb-3">
         <Form.Label>Assignment Name</Form.Label>
-        <Form.Control type="text" defaultValue={assignment.title} />
+        <Form.Control
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </Form.Group>
 
       {/* Description */}
       <Form.Group className="mb-3">
-        <div
-          className="form-control"
-          style={{ minHeight: "200px", whiteSpace: "pre-line" }}
-          dangerouslySetInnerHTML={{ __html: assignment.description }}
+        <Form.Label>Description</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={5}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </Form.Group>
 
@@ -85,7 +159,11 @@ export default function AssignmentEditor() {
           Points
         </Form.Label>
         <Col sm={4}>
-          <Form.Control type="number" defaultValue={assignment.points} />
+          <Form.Control
+            type="number"
+            value={points}
+            onChange={(e) => setPoints(Number(e.target.value))}
+          />
         </Col>
       </Form.Group>
 
@@ -95,7 +173,7 @@ export default function AssignmentEditor() {
           Assignment Group
         </Form.Label>
         <Col sm={4}>
-          <Form.Select defaultValue={assignment.group}>
+          <Form.Select value={group} onChange={(e) => setGroup(e.target.value)}>
             <option>ASSIGNMENTS</option>
             <option>QUIZZES</option>
             <option>EXAMS</option>
@@ -110,7 +188,10 @@ export default function AssignmentEditor() {
           Display Grade as
         </Form.Label>
         <Col sm={4}>
-          <Form.Select defaultValue={assignment.displayGradeAs}>
+          <Form.Select
+            value={displayGradeAs}
+            onChange={(e) => setDisplayGradeAs(e.target.value)}
+          >
             <option>Percentage</option>
             <option>Points</option>
             <option>Complete/Incomplete</option>
@@ -124,7 +205,10 @@ export default function AssignmentEditor() {
           Submission Type
         </Form.Label>
         <Col sm={4} className="mt-2 p-3 border rounded">
-          <Form.Select defaultValue={assignment.submissionType}>
+          <Form.Select
+            value={submissionType}
+            onChange={(e) => setSubmissionType(e.target.value)}
+          >
             <option>Online</option>
             <option>On Paper</option>
             <option>No Submission</option>
@@ -143,7 +227,8 @@ export default function AssignmentEditor() {
                 key={option}
                 type="checkbox"
                 label={option}
-                defaultChecked={assignment.onlineEntryOptions?.includes(option)}
+                checked={onlineEntryOptions.includes(option)}
+                onChange={() => handleCheckboxChange(option)}
               />
             ))}
           </div>
@@ -160,7 +245,7 @@ export default function AssignmentEditor() {
           <div className="mb-3">
             <Form.Label>Assign to</Form.Label>
             <Select
-              defaultValue={selectedOptions}
+              value={selectedOptions}
               isMulti
               options={assignToOptions}
               classNamePrefix="select"
@@ -210,15 +295,12 @@ export default function AssignmentEditor() {
 
       {/* Buttons */}
       <div className="d-flex justify-content-end mt-4">
-        <Link
-          href={`/Courses/${cid}/Assignments`}
-          className="btn btn-secondary me-2"
-        >
+        <Button variant="secondary" className="me-2" onClick={handleCancel}>
           Cancel
-        </Link>
-        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-danger">
+        </Button>
+        <Button variant="danger" onClick={handleSave}>
           Save
-        </Link>
+        </Button>
       </div>
     </div>
   );

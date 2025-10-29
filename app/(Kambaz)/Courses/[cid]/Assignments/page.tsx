@@ -4,19 +4,37 @@ import { Badge, Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
 import Link from "next/link";
 import { BsGripVertical, BsPlus, BsSearch } from "react-icons/bs";
 import { PiNotePencil } from "react-icons/pi";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTrash } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { VscTriangleDown } from "react-icons/vsc";
-import { useParams } from "next/navigation";
-
-import * as db from "../../../Database";
+import { useParams, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./[aid]/reducer";
 
 export default function AssignmentList() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  // Check if current user is faculty
+  const isFaculty = currentUser?.role === "FACULTY";
 
   // Filter assignments belonging to this course
-  const courseAssignments = assignments.filter((a) => a.course === cid);
+  const courseAssignments = assignments.filter((a: any) => a.course === cid);
+
+  const handleDelete = (assignmentId: string, assignmentTitle: string) => {
+    if (
+      window.confirm(`Are you sure you want to remove "${assignmentTitle}"?`)
+    ) {
+      dispatch(deleteAssignment(assignmentId));
+    }
+  };
+
+  const handleAddAssignment = () => {
+    router.push(`/Courses/${cid}/Assignments/new`);
+  };
 
   return (
     <div id="wd-assignments" className="p-3">
@@ -33,20 +51,27 @@ export default function AssignmentList() {
           />
         </div>
 
-        {/* Action buttons */}
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="me-2"
-            id="wd-add-assignment-group"
-          >
-            <BsPlus className="me-1 fs-6" /> Group
-          </Button>
-          <Button variant="danger" size="sm" id="wd-add-assignment">
-            <BsPlus className="me-1 fs-6" /> Assignment
-          </Button>
-        </div>
+        {/* Action buttons - only for faculty */}
+        {isFaculty && (
+          <div>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="me-2"
+              id="wd-add-assignment-group"
+            >
+              <BsPlus className="me-1 fs-6" /> Group
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              id="wd-add-assignment"
+              onClick={handleAddAssignment}
+            >
+              <BsPlus className="me-1 fs-6" /> Assignment
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Section header */}
@@ -60,14 +85,18 @@ export default function AssignmentList() {
           <Badge pill bg="light" text="dark" className="fw-normal me-2 border">
             40% of Total
           </Badge>
-          <BsPlus className="fs-4 me-2" />
-          <IoEllipsisVertical className="fs-4 text-muted" />
+          {isFaculty && (
+            <>
+              <BsPlus className="fs-4 me-2" />
+              <IoEllipsisVertical className="fs-4 text-muted" />
+            </>
+          )}
         </div>
       </div>
 
       {/* Dynamic assignment list */}
       <ListGroup id="wd-assignment-list" className="list-group-flush">
-        {courseAssignments.map((a) => (
+        {courseAssignments.map((a: any) => (
           <ListGroupItem
             key={a._id}
             className="d-flex p-0 border-0 border-bottom rounded-0"
@@ -93,12 +122,34 @@ export default function AssignmentList() {
 
                 <div className="text-muted small">
                   <span className="text-danger">Multiple Modules</span> |{" "}
-                  <b>Not available until</b> May 6 at 12:00am | <br />
-                  <b>Due</b> May 13 at 11:59pm | <b>100 pts</b>
+                  <b>Not available until</b>{" "}
+                  {a.availableFrom
+                    ? new Date(a.availableFrom).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "N/A"}{" "}
+                  at 12:00am | <br />
+                  <b>Due</b>{" "}
+                  {a.dueDate
+                    ? new Date(a.dueDate).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "N/A"}{" "}
+                  at 11:59pm | <b>{a.points} pts</b>
                 </div>
               </div>
 
               <div className="d-flex align-items-center ms-2">
+                {/* Only show delete button for faculty */}
+                {isFaculty && (
+                  <FaTrash
+                    className="text-danger me-3 fs-5"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleDelete(a._id, a.title)}
+                  />
+                )}
                 <FaCheckCircle className="text-success me-3 fs-5" />
                 <IoEllipsisVertical className="fs-4 text-muted" />
               </div>
