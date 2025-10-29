@@ -1,6 +1,6 @@
 "use client";
 import { Provider } from "react-redux";
-import store from "./store/page";
+import store from "./store";
 import ArrayStateVariable from "./ArrayStateVariable";
 import BooleanStateVariables from "./BooleanStateVariables";
 import ClickEvent from "./ClickEvent";
