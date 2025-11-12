@@ -7,7 +7,8 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "./reducer";
+import { addAssignment, updateAssignment, setAssignments } from "./reducer";
+import * as client from "../client";
 
 // Static dropdown options
 const assignToOptions = [
@@ -74,6 +75,16 @@ export default function AssignmentEditor() {
     })) || [assignToOptions[0]]
   );
 
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      const fetchedAssignments = await client.findAssignmentsForCourse(
+        cid as string
+      );
+      dispatch(setAssignments(fetchedAssignments));
+    };
+    fetchAssignments();
+  }, [cid]);
+
   const handleCheckboxChange = (option: string) => {
     setOnlineEntryOptions((prev) =>
       prev.includes(option)
@@ -82,7 +93,7 @@ export default function AssignmentEditor() {
     );
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const assignmentData = {
       _id: existingAssignment?._id,
       title,
@@ -100,9 +111,17 @@ export default function AssignmentEditor() {
     };
 
     if (isNewAssignment) {
-      dispatch(addAssignment(assignmentData));
+      const newAssignment = await client.createAssignment(
+        cid as string,
+        assignmentData
+      );
+      dispatch(setAssignments([...assignments, newAssignment]));
     } else {
-      dispatch(updateAssignment(assignmentData));
+      await client.updateAssignment(assignmentData);
+      const updatedAssignments = assignments.map((a: any) =>
+        a._id === assignmentData._id ? assignmentData : a
+      );
+      dispatch(setAssignments(updatedAssignments));
     }
 
     router.push(`/Courses/${cid}/Assignments`);
@@ -129,7 +148,11 @@ export default function AssignmentEditor() {
       </div>
     );
   }
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
+  const isStudent = currentUser?.role === "STUDENT";
+  console.log("current user: ", currentUser, " ", isStudent);
+  const isReadOnly = isStudent;
   return (
     <div id="wd-assignments-editor" className="p-3">
       {/* Assignment Name */}
@@ -139,6 +162,7 @@ export default function AssignmentEditor() {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          disabled={isReadOnly}
         />
       </Form.Group>
 
@@ -150,6 +174,7 @@ export default function AssignmentEditor() {
           rows={5}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          disabled={isReadOnly}
         />
       </Form.Group>
 
@@ -163,6 +188,7 @@ export default function AssignmentEditor() {
             type="number"
             value={points}
             onChange={(e) => setPoints(Number(e.target.value))}
+            disabled={isReadOnly}
           />
         </Col>
       </Form.Group>
@@ -173,7 +199,11 @@ export default function AssignmentEditor() {
           Assignment Group
         </Form.Label>
         <Col sm={4}>
-          <Form.Select value={group} onChange={(e) => setGroup(e.target.value)}>
+          <Form.Select
+            value={group}
+            onChange={(e) => setGroup(e.target.value)}
+            disabled={isReadOnly}
+          >
             <option>ASSIGNMENTS</option>
             <option>QUIZZES</option>
             <option>EXAMS</option>
@@ -191,6 +221,7 @@ export default function AssignmentEditor() {
           <Form.Select
             value={displayGradeAs}
             onChange={(e) => setDisplayGradeAs(e.target.value)}
+            disabled={isReadOnly}
           >
             <option>Percentage</option>
             <option>Points</option>
@@ -208,6 +239,7 @@ export default function AssignmentEditor() {
           <Form.Select
             value={submissionType}
             onChange={(e) => setSubmissionType(e.target.value)}
+            disabled={isReadOnly}
           >
             <option>Online</option>
             <option>On Paper</option>
@@ -229,6 +261,7 @@ export default function AssignmentEditor() {
                 label={option}
                 checked={onlineEntryOptions.includes(option)}
                 onChange={() => handleCheckboxChange(option)}
+                disabled={isReadOnly}
               />
             ))}
           </div>
@@ -251,6 +284,7 @@ export default function AssignmentEditor() {
               classNamePrefix="select"
               placeholder="Select..."
               onChange={(opts) => setSelectedOptions(opts as AssignOption[])}
+              isDisabled={isReadOnly}
             />
           </div>
 
@@ -263,6 +297,7 @@ export default function AssignmentEditor() {
               showTimeSelect
               dateFormat="MMMM d, yyyy, h:mm aa"
               className="form-control"
+              disabled={isReadOnly}
             />
           </div>
 
@@ -276,6 +311,7 @@ export default function AssignmentEditor() {
                 showTimeSelect
                 dateFormat="MMMM d, yyyy, h:mm aa"
                 className="form-control"
+                disabled={isReadOnly}
               />
             </Col>
             <Col>
@@ -287,6 +323,7 @@ export default function AssignmentEditor() {
                 placeholderText="Click to select a date"
                 dateFormat="MMMM d, yyyy, h:mm aa"
                 className="form-control"
+                disabled={isReadOnly}
               />
             </Col>
           </Row>
@@ -295,12 +332,22 @@ export default function AssignmentEditor() {
 
       {/* Buttons */}
       <div className="d-flex justify-content-end mt-4">
-        <Button variant="secondary" className="me-2" onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button variant="danger" onClick={handleSave}>
-          Save
-        </Button>
+        {isStudent ? (
+          <div className="text-muted">
+            <em>
+              View only - You do not have permission to edit this assignment
+            </em>
+          </div>
+        ) : (
+          <>
+            <Button variant="secondary" className="me-2" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleSave}>
+              Save
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { assignments } from "../../../../Database"
 import { v4 as uuidv4 } from "uuid";
+import StateManagedSelect from "react-select";
 
 const initialState = {
   assignments: assignments,
@@ -46,9 +47,13 @@ const assignmentsSlice = createSlice({
         a._id === assignmentId ? { ...a, editing: true } : a
       ) as any;
     },
+
+    setAssignments: (state, action) => {
+      state.assignments = action.payload
+    }
   },
 });
 
-export const { addAssignment, deleteAssignment, updateAssignment, editAssignment } =
+export const { addAssignment, deleteAssignment, updateAssignment, editAssignment, setAssignments } =
   assignmentsSlice.actions;
 export default assignmentsSlice.reducer;

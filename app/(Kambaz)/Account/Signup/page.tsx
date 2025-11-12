@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { setCurrentUser } from "../reducer";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import {
   Container,
   Row,
@@ -10,14 +13,18 @@ import {
   Button,
   FormControl,
 } from "react-bootstrap";
+import * as client from "../client";
 
 export default function Signup() {
   const router = useRouter();
+  const [user, setUser] = useState<any>({});
+  const dispatch = useDispatch();
 
   // Function to handle form submission
-  const handleSignup = (event: React.FormEvent) => {
+  const handleSignup = async (event: React.FormEvent) => {
     event.preventDefault(); // Prevent the default form submission behavior
-    // Here you would typically handle user registration logic
+    const currentUser = await client.signup(user);
+    dispatch(setCurrentUser(currentUser));
     // After successful signup, navigate to the profile page:
     router.push("/Account/Profile");
   };
@@ -29,14 +36,19 @@ export default function Signup() {
           <h1 className="mb-4">Signup</h1>
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3" controlId="wd-username">
-              <FormControl placeholder="username" defaultValue={"raptor"} />
+              <FormControl
+                placeholder="username"
+                value={user.username}
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-password">
               <FormControl
                 placeholder="password"
                 type="password"
-                defaultValue={"123123123"}
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </Form.Group>
 

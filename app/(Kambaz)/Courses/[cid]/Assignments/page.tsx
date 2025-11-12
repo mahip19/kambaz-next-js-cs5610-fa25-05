@@ -9,7 +9,9 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { VscTriangleDown } from "react-icons/vsc";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./[aid]/reducer";
+import { deleteAssignment, setAssignments } from "./[aid]/reducer";
+import * as client from "./client";
+import { useEffect } from "react";
 
 export default function AssignmentList() {
   const { cid } = useParams();
@@ -24,11 +26,29 @@ export default function AssignmentList() {
   // Filter assignments belonging to this course
   const courseAssignments = assignments.filter((a: any) => a.course === cid);
 
-  const handleDelete = (assignmentId: string, assignmentTitle: string) => {
+  // using apis
+  const fetchAssignments = async () => {
+    const fetchAssignmentForCourse = await client.findAssignmentsForCourse(
+      cid as string
+    );
+    dispatch(setAssignments(fetchAssignmentForCourse));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+  const handleDelete = async (
+    assignmentId: string,
+    assignmentTitle: string
+  ) => {
     if (
       window.confirm(`Are you sure you want to remove "${assignmentTitle}"?`)
     ) {
-      dispatch(deleteAssignment(assignmentId));
+      await client.deleteAssignment(assignmentId);
+      dispatch(
+        setAssignments(assignments.filter((a: any) => a._id !== assignmentId))
+      );
     }
   };
 

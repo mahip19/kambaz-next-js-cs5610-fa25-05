@@ -1,4 +1,5 @@
 "use client";
+import * as client from "../client";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Changed import
 import { setCurrentUser } from "../reducer";
@@ -19,14 +20,9 @@ export default function Signin() {
   const dispatch = useDispatch();
   const router = useRouter(); // Use router instead of redirect
 
-  const signin = (e: React.FormEvent) => {
+  const signin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form submission/page refresh
-
-    const user = db.users.find(
-      (u: any) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
+    const user = await client.signin(credentials);
 
     if (!user) {
       alert("Invalid credentials");
