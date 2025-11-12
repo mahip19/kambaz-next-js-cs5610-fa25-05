@@ -66,7 +66,14 @@ export default function TOC() {
         </NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="https://github.com/mahip19">My GitHub</NavLink>
+        <NavLink href="https://github.com/mahip19/kambaz-next-js-cs5610-fa25-05">
+          My GitHub - React
+        </NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="https://github.com/mahip19/kambaz-node-server-app">
+          My GitHub - Node
+        </NavLink>
       </NavItem>
     </Nav>
   );
