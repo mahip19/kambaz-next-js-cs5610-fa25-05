@@ -8,7 +8,7 @@ import PeopleDetails from "../Details";
 export default function PeopleTable({ users = [] }: { users?: any[] }) {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-
+  console.log("in users table: ", users.length);
   const handleUserClick = (userId: string) => {
     setSelectedUserId(userId);
     console.log("selected user ", selectedUserId);
