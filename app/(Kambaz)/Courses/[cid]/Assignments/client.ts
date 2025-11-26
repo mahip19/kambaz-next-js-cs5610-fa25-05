@@ -18,13 +18,13 @@ export const createAssignment = async (courseId: string, assignment: any) => {
 };
 
 export const deleteAssignment = async (assignmentId: string) => {
-  const response = await axios.delete(`${ASSIGNMENTS_API}/${assignmentId}`);
+  const response = await axios.delete(`${HTTP_SERVER}/api/assignments/${assignmentId}`);
   return response.data;
 };
 
 export const updateAssignment = async (assignment: any) => {
   const response = await axios.put(
-    `${ASSIGNMENTS_API}/${assignment._id}`,
+    `${HTTP_SERVER}/api/assignments/${assignment._id}`,
     assignment
   );
   return response.data;
