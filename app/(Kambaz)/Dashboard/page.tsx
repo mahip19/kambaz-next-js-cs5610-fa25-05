@@ -32,7 +32,8 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   // Check if current user is faculty
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty =
+    currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
   // State to toggle between showing all courses or only enrolled courses
   const [showAllCourses, setShowAllCourses] = useState(false);
