@@ -1,64 +1,30 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "next/navigation";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import PeopleDetails from "../Details";
-import * as client from "../../../client";
 
-export default function PeopleTable() {
-  const { cid } = useParams();
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+import PeopleDetails from "../../../Courses/[cid]/People/Details";
+
+export default function PeopleTable({ users = [] }: { users?: any[] }) {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  console.log("in people table: ", users);
-  // Fetch users when component mounts
-  useEffect(() => {
-    const fetchUsersForCourse = async () => {
-      if (!cid) return;
-
-      try {
-        setLoading(true);
-        console.log("Fetching users for course:", cid);
-        const courseUsers = await client.findUsersForCourse(cid as string);
-        console.log("Fetched users:", courseUsers);
-        setUsers(courseUsers || []);
-      } catch (error) {
-        console.error("Error fetching users for course:", error);
-        setUsers([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsersForCourse();
-  }, [cid]);
 
   const handleUserClick = (userId: string) => {
     setSelectedUserId(userId);
     console.log("selected user ", userId);
   };
 
-  if (loading) {
-    return (
-      <div id="wd-people-table" className="p-4">
-        <h3>Loading course participants...</h3>
-      </div>
-    );
-  }
-
   if (!users || users.length === 0) {
     return (
       <div id="wd-people-table" className="p-4">
         <h3>People</h3>
-        <p>No users enrolled in this course yet.</p>
+        <p>No users found.</p>
       </div>
     );
   }
 
-  console.log("in users table: ", users.length);
+  console.log("in shared people table: ", users.length);
 
   return (
     <div id="wd-people-table">
@@ -101,11 +67,13 @@ export default function PeopleTable() {
                   </span>
                 )}
               </td>
-              <td className="wd-login-id">{user.loginId}</td>
-              <td className="wd-section">{user.section}</td>
+              <td className="wd-login-id">{user.loginId || user.username}</td>
+              <td className="wd-section">{user.section || "N/A"}</td>
               <td className="wd-role">{user.role}</td>
-              <td className="wd-last-activity">{user.lastActivity}</td>
-              <td className="wd-total-activity">{user.totalActivity}</td>
+              <td className="wd-last-activity">{user.lastActivity || "N/A"}</td>
+              <td className="wd-total-activity">
+                {user.totalActivity || "N/A"}
+              </td>
             </tr>
           ))}
         </tbody>
