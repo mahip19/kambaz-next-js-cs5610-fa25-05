@@ -39,7 +39,7 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
     setIsSidebarVisible(!isSidebarVisible);
   };
 
-  // Don't render if not enrolled
+  // do not  render if not enrolled
   if (!isEnrolled) {
     return null;
   }
